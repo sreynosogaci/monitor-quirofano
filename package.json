@@ -17,11 +17,13 @@
     "@tanstack/react-table": "^8.11.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "date-fns": "^3.0.6",
     "just-debounce-it": "^3.2.0",
     "lucide-react": "^0.303.0",
     "next": "14.0.4",
     "next-themes": "^0.2.1",
     "react": "^18",
+    "react-day-picker": "^8.10.0",
     "react-dom": "^18",
     "usehooks-ts": "^2.9.1"
   },
