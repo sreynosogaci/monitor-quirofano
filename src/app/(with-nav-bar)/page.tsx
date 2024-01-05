@@ -4,7 +4,7 @@ const Home = () => {
 
     return (
         // <Option1 />
-        <div className='w-1/2 mx-auto h-screen p-8'>
+        <div className='w-full mx-auto h-screen p-8'>
             <Monitor />
         </div>
     )

@@ -1,11 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { cn } from '@/lib/utils'
+import { getEstado, getSalas, getTurnos } from '@/services/turnos'
 import React from 'react'
 
 type Props = {
     className?: string
 }
 
-export const Monitor = ({ className }: Props) => {
+export const Monitor = async ({ className }: Props) => {
     const getLabelHorario = (hora: number) => {
         if (hora - Math.floor(hora) === 0.5) {
             if (hora < 10) return `0${Math.floor(hora)}:30`
@@ -26,21 +28,9 @@ export const Monitor = ({ className }: Props) => {
         horarios.push(i + 0.5)
     }
 
-    const salas = [
-        { id: 'sala1', label: 'Sala 1' },
-        { id: 'sala2', label: 'Sala 2' },
-        { id: 'sala3', label: 'Sala 3' },
-        { id: 'sala4', label: 'Sala 4' },
-        { id: 'sala5', label: 'Sala 5' },
-    ]
+    const salas = await getSalas()
 
-    const turnos = [
-        { id: 'turno1', label: 'Turno 1', sala: 'sala1', horaInicio: 1, horaFin: 10 },
-        { id: 'turno2', label: 'Turno 2', sala: 'sala2', horaInicio: 9.5, horaFin: 11.5 },
-        { id: 'turno3', label: 'Turno 3', sala: 'sala3', horaInicio: 10, horaFin: 12.5 },
-        { id: 'turno4', label: 'Turno 4', sala: 'sala4', horaInicio: 11, horaFin: 13 },
-        { id: 'turno5', label: 'Turno 5', sala: 'sala5', horaInicio: 23.5, horaFin: 25 },
-    ]
+    const turnos = await getTurnos()
 
 
     const firstColumnWidth = 80
@@ -66,16 +56,22 @@ export const Monitor = ({ className }: Props) => {
                 ))}
             </div>
             {/* Líneas */}
-            <div className={`absolute w-full left-0 top-12 z-0 px-4 grid grid-rows-[repeat(49,${rowHeight}px)]`}>
-                {new Array(49).fill(0).map((_, i) => (
+            <div
+                id='lineas'
+                className='absolute h-full w-full left-0 top-12 z-0 px-4 grid'
+                style={{ gridTemplateRows: `repeat(${horarios.length + 1}, ${rowHeight}px)`}}
+            >
+                {new Array(horarios.length + 1).fill(0).map((_, i) => (
                     <div
                         key={i}
-                        className='border-b grid'
+                        className='border-b grid h-full'
                         style={{ gridTemplateColumns: `${firstColumnWidth}px repeat(${salas.length}, 1fr)` }}
                     >
-                        {salas.map((sala) => (
-                            <div key={sala.id} className='border-r'></div>
-                        ))}
+                        {/* {salas.map((sala) => (
+                            <div key={sala.id} className='border-r w-full h-full'>
+                                
+                            </div>
+                        ))} */}
                     </div>
                 ))}
             </div>
@@ -85,32 +81,58 @@ export const Monitor = ({ className }: Props) => {
                 className='w-full grid gap-2'
                 style={{ gridTemplateColumns: `${firstColumnWidth}px repeat(${salas.length}, 1fr)` }}
             >
+                {/* Horarios */}
                 <div
-                    id='columna-horarios'
-                    className={`grid grid-rows-[repeat(49,${rowHeight}px)] w-full`}
+                    id='horarios'
+                    className='grid w-full'
+                    style={{ gridTemplateRows: `repeat(${horarios.length + 1}, ${rowHeight}px)`}}
                 >
                     {horarios.map((hora) => (
                         <>
-                            <p className='text-end w-full flex items-center justify-center text-muted-foreground pr-2'>
+                            <p key={hora} className='text-end w-full flex items-center justify-center text-muted-foreground pr-2'>
                                 {getLabelHorario(hora)}
                             </p>
                         </>
                     ))}
                 </div>
+
+                {/* Salas */}
                 {salas.map((sala) => (
-                    <div key={sala.id} className={`grid grid-rows-[repeat(49,${rowHeight}px)] w-full z-40 pr-2`}>
+                    <div 
+                        key={sala.id}
+                        className='grid w-full z-40 pr-2'
+                        style={{ gridTemplateRows: `repeat(${horarios.length + 1}, ${rowHeight}px)`}}
+                    >
                         {turnos.filter(t => t.sala === sala.id).map((turno) => (
                             <div
                                 key={turno.id}
-                                className='bg-red-400 rounded-md'
+                                className='bg-foreground border rounded-md overflow-hidden'
                                 style={{
                                     gridRowStart: getEquivalenciaHorario(turno.horaInicio),
                                     gridRowEnd: getEquivalenciaHorario(turno.horaFin),
                                 }}
                             >
-                                <p className='text-center flex items-center justify-center text-muted-foreground'>
-                                    {turno.label}
-                                </p>
+                                <div className={cn(
+                                    'h-[40px] w-full flex items-center justify-center text-white text-md font-bold',
+                                    turno.estado === 1 && 'bg-green-400',
+                                    turno.estado === 2 && 'bg-yellow-400',
+                                    turno.estado === 3 && 'bg-blue-700',
+                                    turno.estado === 4 && 'bg-violet-400',
+                                    turno.estado === 5 && 'bg-blue-400',
+                                    turno.estado === 6 && 'bg-gray-400',
+                                )}>
+                                    {getEstado(turno.estado as any)}
+                                </div>
+                                <div className='h-[calc(100%-40px)] w-full p-2'>
+                                    <p className='text-muted'>
+                                        <span className='font-bold'>Paciente: </span>
+                                        {turno.paciente.nombre}
+                                    </p>
+                                    <p className='text-muted'>
+                                        <span className='font-bold'>Profesional: </span>
+                                        {turno.profesional.nombre}
+                                    </p>
+                                </div>
                             </div>
                         ))}
                     </div>
