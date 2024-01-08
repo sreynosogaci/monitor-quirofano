@@ -5,12 +5,30 @@
 import { useBoolean, useEventListener } from 'usehooks-ts'
 import { cn } from '@/lib/utils'
 // import { useMediaQueryXl } from '@/hooks/use-media-queries'
-import { ModeToggle } from '@/components/dark-mode-toggle-button'
+import { Button } from './ui/button'
+import Link from 'next/link'
+import { NavBarOption } from '@/types/utils'
 // import { ChangeTheme } from './change-theme'
 
+const NavOptions = ({ options }: { options: NavBarOption[] }) => (
+    <ul className={cn('hidden xl:flex xl:flex-row xl:gap-5')}>
+        { options.map(op => (
+            <li key={op.value}>
+                <Button variant="link"> 
+                    <Link href={op.value}>{op.label}</Link>
+                </Button>
+            </li>
+        ))}
+    </ul>
+)
 
 export const NavBar = () => {
     const { value: moved, setFalse: setMovedFalse, setTrue: setMovedTrue } = useBoolean(false)
+
+    const navOptions = [
+        { label: 'Agenda', value: '/' },
+        { label: 'Monitor', value: '/monitor' },
+    ]
 
     const onScroll = () => {
         if (window.scrollY > 0) {
@@ -31,8 +49,9 @@ export const NavBar = () => {
             )}
         >
             <div className="w-full h-full mx-auto max-w-7xl flex justify-center items-center relative">
+                <NavOptions options={navOptions}/>
                 {/* <Image src={Logo} alt='Logo' className='h-2/3 max-h-10 w-max absolute left-0' /> */}
-                <ModeToggle className='absolute right-0 hidden xl:inline-flex'/>
+                {/* <ModeToggle className='absolute right-0 hidden xl:inline-flex'/> */}
                 {/* <ChangeTheme /> */}
             </div>
         </nav>
