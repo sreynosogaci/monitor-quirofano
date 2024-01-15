@@ -1,3 +1,31 @@
+export type Turno = {
+    id: string
+    label: string
+    sala: string
+    horaInicio: number
+    horaFin: number
+    estado: keyof typeof estados
+    inicioTurno: string
+    finTurno: string
+    paciente: {
+        nombre: string
+        sexo: string
+        edad: string
+        piso: string
+        habitacion: string
+        cama: string
+        plan: string
+        nroAfil: string
+    }
+    profesional: {
+        id: string
+        nombre: string
+        especialidad: string
+    }
+    adicionales: string
+    diagObs: string
+}
+
 const baseObj = {
     inicioTurno: '02/03/2017 08:00 hs',
     finTurno: '02/03/2017 09:00hs',
@@ -47,9 +75,9 @@ export const getSalas = async () => {
     ]
 }
 
-export const getTurnos = async () => {
+export const getTurnos = async (): Promise<Turno[]> => {
     return [
-        { ...baseObj, id: 'turno1', label: 'Turno 1', sala: 'QX1', horaInicio: 2, horaFin: 3, estado: 1 },
+        { ...baseObj, id: 'turno1', label: 'Turno 1', sala: 'QX1', horaInicio: 2, horaFin: 3, estado: 5 },
         { ...baseObj, id: 'turno2', label: 'Turno 1', sala: 'QX1', horaInicio: 3.5, horaFin: 5, estado: 2 },
         { ...baseObj, id: 'turno3', label: 'Turno 1', sala: 'QX1', horaInicio: 5, horaFin: 7, estado: 3 },
         { ...baseObj, id: 'turno4', label: 'Turno 1', sala: 'QX1', horaInicio: 7.5, horaFin: 10.5, estado: 4 },

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { getEquivalenciaHorario, getLabelHorario } from '@/lib/monitor'
 import { cn } from '@/lib/utils'
 import { getEstado, getSalas, getTurnos } from '@/services/turnos'
 import React from 'react'
@@ -8,19 +9,6 @@ type Props = {
 }
 
 export const Monitor = async ({ className }: Props) => {
-    const getLabelHorario = (hora: number) => {
-        if (hora - Math.floor(hora) === 0.5) {
-            if (hora < 10) return `0${Math.floor(hora)}:30`
-            return `${Math.floor(hora)}:30`
-        } else {
-            if (hora < 10) return `0${hora}:00`
-            return `${hora}:00`
-        }
-    }
-
-    const getEquivalenciaHorario = (hora: number) => {
-        return (hora * 2) + 1
-    }
 
     const horarios: number[] = []
     for (let i = 0; i < 24; i++) {
@@ -56,26 +44,7 @@ export const Monitor = async ({ className }: Props) => {
                     </p>
                 ))}
             </div>
-            {/* Líneas */}
-            <div
-                id       ='lineas'
-                className='absolute h-full w-full left-0 top-12 z-0 px-4 grid'
-                style    ={{ gridTemplateRows: `repeat(${cntFilasHorarios}, ${altoFila}px)`}}
-            >
-                {new Array((cntFilasHorarios)).fill(0).map((_, i) => (
-                    <div
-                        key={i}
-                        className='border-b grid h-full'
-                        style={{ gridTemplateColumns: `${anchoPrimeraColumna}px repeat(${salas.length}, 1fr)` }}
-                    >
-                        {salas.map((sala) => (
-                            <div key={sala.id} className='border-r w-full h-full'>
-                                
-                            </div>
-                        ))}
-                    </div>
-                ))}
-            </div>
+            
 
             {/* Datos */}
             <div
