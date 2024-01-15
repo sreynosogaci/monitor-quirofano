@@ -69,7 +69,6 @@ const MonitorPage = () => {
                                 <p className='text-blue-200'>{datosTurno.diagObs}</p>
                             </div>
                         </div>
-
                     </div>
                 </div>
                 <div className='col-span-3 p-1 grid gap-1 grid-cols-1 border-r'>

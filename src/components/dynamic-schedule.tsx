@@ -3,7 +3,7 @@ import { getUUID } from '@/lib/uuid'
 import React, { PropsWithChildren } from 'react'
 
 interface BaseItem { id: string, columnId: string, row: number, rowSpan: number }
-type Column = { id: string, label: string }
+type Column = { id: string, label: string, link?: string }
 type Row = { label: string }
 
 type SubComponentProps<T> = {

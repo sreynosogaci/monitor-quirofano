@@ -5,15 +5,12 @@ import { cn } from '@/lib/utils'
 import { Turno, getEstado } from '@/services/turnos'
 import {
     Sheet,
-    SheetClose,
     SheetContent,
     SheetDescription,
-    SheetFooter,
     SheetHeader,
     SheetTitle,
 } from '@/components/ui/sheet'
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
 
 export const TurnoItem = ({ item, linesPerRow }: { item: Turno; linesPerRow: number }) => {
     const [turnoSeleccionado, setTurnoSeleccionado] = useState<null | Turno>(null)
@@ -70,13 +67,45 @@ export const TurnoItem = ({ item, linesPerRow }: { item: Turno; linesPerRow: num
                         </SheetDescription>
                     </SheetHeader>
                     <div className="grid gap-4 py-4">
-                        { JSON.stringify(turnoSeleccionado) }
+                        {/* { JSON.stringify(turnoSeleccionado) } */}
+                        { turnoSeleccionado && (
+                            <div className='h-full overflow-y-auto pretty-scrollbar-y [&>*]:text-sm'>
+                                <h3 className='w-20 font-bold'>Turno:</h3>
+                                <div className='ml-4 text-blue-200'>
+                                    <p>Inicio {turnoSeleccionado.inicioTurno}</p>
+                                    <p>Fin {turnoSeleccionado.finTurno}</p>
+                                </div>
+                                <h3 className='w-20 font-bold'>Paciente:</h3>
+                                <div className='ml-4 text-blue-200'>
+                                    <p>{turnoSeleccionado.paciente.nombre} ({turnoSeleccionado.paciente.sexo}{turnoSeleccionado.paciente.edad})</p>
+                                    <p>({turnoSeleccionado.paciente.piso}, {turnoSeleccionado.paciente.habitacion}, {turnoSeleccionado.paciente.cama})</p>
+                                    <p>SUMA, Plan: {turnoSeleccionado.paciente.plan}</p>
+                                    <p>Nro Afi: {turnoSeleccionado.paciente.nroAfil}</p>
+                                </div>
+                                <h3 className='w-20 font-bold'>Profesional:</h3>
+                                <div className='ml-4 text-blue-200'>
+                                    <p>({turnoSeleccionado.profesional.id}) {turnoSeleccionado.profesional.nombre} ({turnoSeleccionado.profesional.especialidad})</p>
+                                </div>
+                                <p className='w-20 font-bold'>Estado:</p>
+                                <div className='ml-4 text-blue-200'>
+                                    <p>{turnoSeleccionado.estado}</p>
+                                </div>
+                                <p className='w-20 font-bold'>Adicionales:</p>
+                                <div className='ml-4 text-blue-200'>
+                                    <p>{turnoSeleccionado.adicionales}</p>
+                                </div>
+                                <p className='w-20 font-bold'>Diag/Obs:</p>
+                                <div className='ml-4 text-blue-200'>
+                                    <p>{turnoSeleccionado.diagObs}</p>
+                                </div>
+                            </div>
+                        )}
                     </div>
-                    <SheetFooter>
+                    {/* <SheetFooter>
                         <SheetClose asChild>
                             <Button type="submit">Save changes</Button>
                         </SheetClose>
-                    </SheetFooter>
+                    </SheetFooter> */}
                 </SheetContent>
             </Sheet>
         </>
