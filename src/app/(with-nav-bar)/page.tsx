@@ -5,16 +5,6 @@ import React from 'react'
 import { TurnoItem } from '@/components/turno-item'
 
 const Home = async () => {
-    // const columns = [
-    //     { id: 'monday', label: 'Lunes' },
-    //     { id: 'tuesday', label: 'Martes' },
-    //     { id: 'wednesday', label: 'Miercoles' },
-    //     { id: 'thursday', label: 'Jueves' },
-    //     { id: 'friday', label: 'Viernes' },
-    //     { id: 'saturday', label: 'Sabado' },
-    //     { id: 'sunday', label: 'Domingo' }
-    // ]
-
     const schedules: { label: string }[] = []
     for (let i = 0; i < 24; i++) {
         schedules.push({ label: getLabelHorario(i) })
@@ -30,10 +20,11 @@ const Home = async () => {
                 columns        = { salas }
                 rows           = { schedules }
                 items          = { turnos }
-                rowHeight      = { 60 }
-                linesPerRow    = { 1 }
+                rowHeight      = { 30 }
+                linesPerRow    = { 2 }
                 columnAssigner = { (t, c) => t.sala === c.id }
                 ItemComponent  = { TurnoItem }
+                withHeaderLink = { true }
             />
         </div>
     )

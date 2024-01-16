@@ -1,9 +1,10 @@
 import { cn } from '@/lib/utils'
 import { getUUID } from '@/lib/uuid'
+import Link from 'next/link'
 import React, { PropsWithChildren } from 'react'
 
 interface BaseItem { id: string, columnId: string, row: number, rowSpan: number }
-type Column = { id: string, label: string, link?: string }
+type Column = { id: string, label: string }
 type Row = { label: string }
 
 type SubComponentProps<T> = {
@@ -20,6 +21,7 @@ type DynamicSchedule<T> = {
     columnAssigner: (item: T, column: Column) => boolean
     items:          (T & Partial<BaseItem>)[]
     ItemComponent:  (props: SubComponentProps<T>) => JSX.Element
+    withHeaderLink?: boolean
 }
 
 type DynamicScheduleLines = {
@@ -40,11 +42,16 @@ type DynamicScheduleRows = {
     linesPerRow: number
 }
 
-const DynamicScheduleHeaderItem = ({ children }: PropsWithChildren) => {
+const DynamicScheduleHeaderItem = ({ href='#', children }: PropsWithChildren<{ href?: string }>) => {
     return (
-        <p className='text-sm font-bold flex items-center justify-center text-muted-foreground'>
-            {children}
-        </p>
+        <Link href={href} className={cn(
+            'flex items-center justify-center',
+            href === '#' ? 'cursor-default' : 'cursor-pointer hover:underline'
+        )}>
+            <p className='text-sm font-bold text-muted-foreground'>
+                {children}
+            </p>
+        </Link>
     )
 }
 
@@ -52,7 +59,7 @@ const DynamicScheduleHeader = ({ style, className, children }: DynamicScheduleHe
     return (
         <div
             className={cn(
-                'w-full grid gap-2 border-b h-12 sticky top-0 bg-background z-50',
+                'w-full grid gap-2 border-b h-12 sticky top-0 bg-background z-40',
                 className
             )}
             style={style}
@@ -113,7 +120,18 @@ const DynamicScheduleLines = ({ columns, rows, columnsStyle, rowsStyle }: Dynami
 }
 
 export const DynamicSchedule = <T,>(props: DynamicSchedule<T>) => {
-    const { columns, rows, rowHeight, linesPerRow, className, items, ItemComponent, columnAssigner } = props
+    const { 
+        columns, 
+        rows, 
+        rowHeight, 
+        linesPerRow, 
+        className, 
+        items, 
+        ItemComponent,
+        columnAssigner,
+        withHeaderLink
+    } = props
+    
     const firstColumnsWidth = 100
 
     const styleObject = {
@@ -133,7 +151,10 @@ export const DynamicSchedule = <T,>(props: DynamicSchedule<T>) => {
             >
                 <DynamicScheduleHeaderItem>Horario</DynamicScheduleHeaderItem>
                 {columns.map((column) => (
-                    <DynamicScheduleHeaderItem key={getUUID()}>
+                    <DynamicScheduleHeaderItem
+                        key  = { getUUID() }
+                        href = { withHeaderLink ? `/${column.id}` : undefined }
+                    >
                         {column.label}
                     </DynamicScheduleHeaderItem>
                 ))}
@@ -156,7 +177,7 @@ export const DynamicSchedule = <T,>(props: DynamicSchedule<T>) => {
                 {columns.map((column) => (
                     <div
                         key       = { getUUID() }
-                        className = 'grid w-full z-40 pr-2 h-full grid-cols-1'
+                        className = 'grid w-full z-30 pr-2 h-full grid-cols-1'
                         style     = { styleObject.rows }
                     >
                         { items.filter(i => columnAssigner(i, column)).map((item) => {
