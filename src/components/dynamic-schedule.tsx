@@ -45,7 +45,7 @@ type DynamicScheduleRows = {
 const DynamicScheduleHeaderItem = ({ href='#', children }: PropsWithChildren<{ href?: string }>) => {
     return (
         <Link href={href} className={cn(
-            'flex items-center justify-center',
+            'flex items-center justify-center text-center',
             href === '#' ? 'cursor-default' : 'cursor-pointer hover:underline'
         )}>
             <p className='text-sm font-bold text-muted-foreground'>

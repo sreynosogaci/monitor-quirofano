@@ -1,18 +1,12 @@
+import prismadb from '@/lib/prismadb'
 import { NextResponse } from 'next/server'
 
 export async function GET() {
-    const { authenticated, data } = await getServerSessionData()
-    if (!authenticated) {
-        return NextResponse.json({ error: 'Operación no permitida' })
-    }
-    const { emptoken, personaId } = data
-
     try {
-        const securityServices = SecurityServices.getInstance()
-        const pagesByPerson    = await securityServices.getPagesByPerson(emptoken, +personaId)
-        return NextResponse.json({ pages: pagesByPerson })
+        const response = await prismadb.sALAS.findMany()
+        return NextResponse.json({ data: response, error: null })
     } catch (error) {
-        logError(error)
-        return NextResponse.json({ pages: null })
+        console.log('Error en GET /api/salas', error)
+        return NextResponse.json({ data: null, error: error })
     }
 }
