@@ -3,14 +3,15 @@ import { Turno } from '@/types/turno'
 import { format } from 'date-fns'
 import { useEffect, useState } from 'react'
 
-export const useTurnos = (date: Date) => {
+export const useTurnos = (date: Date | undefined) => {
     const [turnos, setTurnos] = useState<Turno[] | null>(null)
     const { toast } = useToast()
     
     useEffect(() => {
         const fetchTurnos = async () => {
+            console.log('Fetch turnos')
             try {
-                const formattedDate = format(date, 'yyyy-MM-dd')
+                const formattedDate = format(date || new Date(), 'yyyy-MM-dd')
                 const response = await fetch(`/api/turnos?date=${formattedDate}`)
                 const data = await response.json()
 

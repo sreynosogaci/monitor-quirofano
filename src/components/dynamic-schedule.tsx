@@ -10,18 +10,22 @@ type Row = { label: string }
 type SubComponentProps<T> = {
     item: T & Partial<BaseItem>
     linesPerRow: number
+    onClick?: (item: T & Partial<BaseItem>) => void
 }
 
 type DynamicSchedule<T> = {
-    columns:        Column[],
-    rows:           Row[]
-    rowHeight:      number
-    linesPerRow:    number
-    className?:     string
-    columnAssigner: (item: T, column: Column) => boolean
-    items:          (T & Partial<BaseItem>)[]
-    ItemComponent:  (props: SubComponentProps<T>) => JSX.Element
-    withHeaderLink?: boolean
+    columns:          Column[],
+    rows:             Row[]
+    rowHeight:        number
+    linesPerRow:      number
+    headerClassName?: string
+    linesClassName?:  string
+    className?:       string
+    columnAssigner:   (item: T, column: Column) => boolean
+    items:            (T & Partial<BaseItem>)[]
+    ItemComponent:    (props: SubComponentProps<T>) => JSX.Element
+    withHeaderLink?:  boolean
+    itemOnClick:      (item: T & Partial<BaseItem>) => void
 }
 
 type DynamicScheduleLines = {
@@ -29,6 +33,7 @@ type DynamicScheduleLines = {
     rows:         number,
     columnsStyle: React.CSSProperties,
     rowsStyle:    React.CSSProperties
+    className?:   string
 }
 
 type DynamicScheduleHeader = PropsWithChildren<{
@@ -59,7 +64,7 @@ const DynamicScheduleHeader = ({ style, className, children }: DynamicScheduleHe
     return (
         <div
             className={cn(
-                'w-full grid gap-2 border-b h-12 sticky top-0 bg-background z-40',
+                'col-span-1 grid border-b h-12 sticky top-0 z-40 bg-background',
                 className
             )}
             style={style}
@@ -95,7 +100,7 @@ const DynamicScheduleRows = ({ rows, rowsStyle, linesPerRow }: DynamicScheduleRo
     )
 }
 
-const DynamicScheduleLines = ({ columns, rows, columnsStyle, rowsStyle }: DynamicScheduleLines) => {
+const DynamicScheduleLines = ({ columns, rows, columnsStyle, rowsStyle, className }: DynamicScheduleLines) => {
     const rowsArray: number[] = new Array(rows).fill(0)
     const columnsArray: number[] = new Array(columns).fill(0)
 
@@ -107,11 +112,14 @@ const DynamicScheduleLines = ({ columns, rows, columnsStyle, rowsStyle }: Dynami
             {rowsArray.map(() => (
                 <div
                     key       = { getUUID() }
-                    className = 'border-b grid h-full'
+                    className = { cn('border-b grid h-full', className) }
                     style     = { columnsStyle }
                 >
                     {columnsArray.map(() => (
-                        <div key={getUUID()} className='border-r w-full h-full'></div>
+                        <div
+                            key={getUUID()}
+                            className={cn('border-r w-full h-full', className)}
+                        ></div>
                     ))}
                 </div>
             ))}
@@ -126,27 +134,31 @@ export const DynamicSchedule = <T,>(props: DynamicSchedule<T>) => {
         rowHeight, 
         linesPerRow, 
         className, 
+        linesClassName,
+        headerClassName,
         items, 
         ItemComponent,
         columnAssigner,
-        withHeaderLink
+        withHeaderLink,
+        itemOnClick
     } = props
     
     const firstColumnsWidth = 100
 
     const styleObject = {
-        columns: { gridTemplateColumns: `${firstColumnsWidth}px repeat(${columns.length}, 1fr)` },
+        columns: { gridTemplateColumns: `${firstColumnsWidth}px repeat(${columns.length}, minmax(200px, 1fr))` },
         rows:    { gridTemplateRows: `repeat(${rows.length * linesPerRow}, ${rowHeight}px)` }
     }
 
     return (
         <div
             className={cn(
-                'relative border rounded h-full overflow-x-hidden overflow-y-auto pretty-scrollbar-y px-4',
+                'relative border rounded h-full overflow-x-auto overflow-y-auto px-4 grid bg-background',
                 className
             )}
         >
             <DynamicScheduleHeader
+                className={headerClassName}
                 style={styleObject.columns}
             >
                 <DynamicScheduleHeaderItem>Horario</DynamicScheduleHeaderItem>
@@ -165,9 +177,10 @@ export const DynamicSchedule = <T,>(props: DynamicSchedule<T>) => {
                 rows         = { rows.length * linesPerRow }
                 columnsStyle = { styleObject.columns }
                 rowsStyle    = { styleObject.rows }
+                className    = { linesClassName }
             />
 
-            <div className='w-full grid gap-2 h-full' style={styleObject.columns}>
+            <div className='w-full grid h-full' style={styleObject.columns}>
                 <DynamicScheduleRows
                     rows        = { rows }
                     rowsStyle   = { styleObject.rows }
@@ -177,7 +190,7 @@ export const DynamicSchedule = <T,>(props: DynamicSchedule<T>) => {
                 {columns.map((column) => (
                     <div
                         key       = { getUUID() }
-                        className = 'grid w-full z-30 pr-2 h-full grid-cols-1'
+                        className = 'grid w-full z-30 h-full grid-cols-1'
                         style     = { styleObject.rows }
                     >
                         { items.filter(i => columnAssigner(i, column)).map((item) => {
@@ -186,6 +199,7 @@ export const DynamicSchedule = <T,>(props: DynamicSchedule<T>) => {
                                     key         = { getUUID() }
                                     item        = { item as T & Partial<BaseItem> }
                                     linesPerRow = { linesPerRow }
+                                    onClick     = { itemOnClick }
                                 />
                             )
                         })}

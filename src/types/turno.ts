@@ -1,4 +1,15 @@
 import { Estado } from './estado'
+import { HistoriaClinica } from './historias'
+import { Internacion } from './internacion'
+import { Medico } from './medico'
+import { ObraSocial } from './obra-social'
+
+// export type Turno = ReturnType<typeof prismadb.tURNOS.findUnique> & {
+//     estado: Estado | null
+//     historiaClinica: HistoriaClinica | null
+//     internacion: Internacion | null
+//     obraSocial: ObraSocial | null
+// }
 
 export interface Turno {
     TurID:             number;
@@ -35,5 +46,9 @@ export interface Turno {
     TurNro:            number;
     TurHoraIni:        Date;
     TurHoraFin:        Date;
-    estado:            Estado | null
+    estado:            Estado | null,
+    historiaClinica:   HistoriaClinica | null,
+    internacion:       Internacion | null,
+    obraSocial:        ObraSocial | null
+    medico:            Medico | null
 }
