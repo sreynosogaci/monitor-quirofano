@@ -3,6 +3,7 @@
         "deploymentEnabled": {
             "main": true,
             "dev": false,
+            "dev2": false
         }
     }
 }
