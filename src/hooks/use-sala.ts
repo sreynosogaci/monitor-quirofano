@@ -6,9 +6,10 @@ export const useSala = (salaId: number | undefined) => {
 
     useEffect(() => {
         if (salaId) {
-            fetch(`/api/salas/${salaId}`)
+            const url = `/api/salas/${salaId}`
+            fetch(url)
                 .then((res) => res.json())
-                .then((data) => setSala(data))
+                .then((data) => setSala(data.data))
         }
     }, [salaId])
 

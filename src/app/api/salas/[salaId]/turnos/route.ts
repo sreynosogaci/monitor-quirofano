@@ -2,14 +2,19 @@ import { NextRequest, NextResponse } from 'next/server'
 import { format } from 'date-fns'
 import prismadb from '@/lib/prismadb'
 
-export async function GET(request: NextRequest) {
-    const searchParams = request.nextUrl.searchParams
-    const defaultDate = format(new Date(), 'yyyy-MM-dd')
-    const date = searchParams.get('date') || defaultDate
-
+export async function GET(
+    request: NextRequest,
+    { params }: { params: { salaId: string } }
+) {
     try {
+        const searchParams = request.nextUrl.searchParams
+        const defaultDate = format(new Date(), 'yyyy-MM-dd')
+        const date = searchParams.get('date') || defaultDate
+        const salaId = parseInt(params.salaId)
+
         const turnos = await prismadb.tURNOS.findMany({
             where: {
+                TurSala: salaId,
                 Turfecha: new Date(date),
             },
         })

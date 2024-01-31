@@ -8,8 +8,9 @@ export const useTurnos = (date: Date | undefined) => {
     const { toast } = useToast()
     
     useEffect(() => {
+        setTurnos([])
+
         const fetchTurnos = async () => {
-            console.log('Fetch turnos')
             try {
                 const formattedDate = format(date || new Date(), 'yyyy-MM-dd')
                 const response = await fetch(`/api/turnos?date=${formattedDate}`)

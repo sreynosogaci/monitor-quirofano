@@ -1,6 +1,6 @@
 import React from 'react'
-import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet'
-import { Button } from '@/components/ui/button'
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+// import { Button } from '@/components/ui/button'
 import { format } from 'date-fns'
 import { Turno } from '@/types/turno'
 
@@ -87,9 +87,9 @@ export const DetallesTurno = (props: DetallesTurnoProps) => {
                         </div>
                     )}
                 </div>
-                <SheetFooter>
+                {/* <SheetFooter>
                     <Button>Cambiar estado</Button>
-                </SheetFooter>
+                </SheetFooter> */}
             </SheetContent>
         </Sheet>
     )

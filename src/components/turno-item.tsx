@@ -19,17 +19,25 @@ export const TurnoItem = ({ item, linesPerRow, onClick }: TurnoItemProps) => {
         }
     }
 
-    console.log(item)
+    let horaIni = new Date(item.TurHoraIni).getUTCHours()
+    let horaFin = new Date(item.TurHoraFin).getUTCHours()
+    const minutosIni = new Date(item.TurHoraIni).getUTCMinutes()
+    const minutosFin = new Date(item.TurHoraFin).getUTCMinutes()
 
-    const horaIni = new Date(item.TurHoraIni).getUTCHours()
-    const horaFin = new Date(item.TurHoraFin).getUTCHours()
+    if (minutosIni === 30) {
+        horaIni += 0.5
+    }
+    if (minutosFin === 30) {
+        horaFin += 0.5
+    }
+
     const gridRowStart = getEquivalenciaHorario(horaIni, linesPerRow)
     const gridRowEnd = getEquivalenciaHorario(horaFin, linesPerRow)
 
     const historiaClinica = item.historiaClinica
-    const edad = historiaClinica?.HCFechaNacim ? new Date().getFullYear() - new Date(historiaClinica.HCFechaNacim).getFullYear() : null
+    // const edad = historiaClinica?.HCFechaNacim ? new Date().getFullYear() - new Date(historiaClinica.HCFechaNacim).getFullYear() : null
     const medico = item.medico
-    const sexo = historiaClinica?.HCSexo === 'M' ? 'Masculino' : 'Femenino'
+    // const sexo = historiaClinica?.HCSexo === 'M' ? 'Masculino' : 'Femenino'
 
     return (
         <div
@@ -54,7 +62,7 @@ export const TurnoItem = ({ item, linesPerRow, onClick }: TurnoItemProps) => {
             <div className="h-[calc(100%-40px)] w-full p-2">
                 <p className="text-muted">
                     <span className="font-bold">Pac: </span>
-                    {historiaClinica?.HCNombre}
+                    {historiaClinica?.HCApeSol?.trim()}, {historiaClinica?.HCNombre?.trim()}
                 </p>
                 <p className="text-muted">
                     <span className="font-bold">Profesional: </span>
