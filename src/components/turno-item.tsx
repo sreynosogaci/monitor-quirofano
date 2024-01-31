@@ -41,7 +41,7 @@ export const TurnoItem = ({ item, linesPerRow, onClick }: TurnoItemProps) => {
 
     return (
         <div
-            className = "bg-foreground border rounded-md overflow-hidden [&>*]:text-xs"
+            className = "bg-background border border-black/30 rounded-md overflow-hidden [&>*]:text-xs shadow-xl"
             style     = {{ gridRowStart, gridRowEnd }}
             onClick   = {handleClick}
         >
@@ -60,11 +60,11 @@ export const TurnoItem = ({ item, linesPerRow, onClick }: TurnoItemProps) => {
                 <p>{item.estado ? item.estado.EstTQDsc : 'Sin estado'}</p>
             </div>
             <div className="h-[calc(100%-40px)] w-full p-2">
-                <p className="text-muted">
+                <p>
                     <span className="font-bold">Pac: </span>
                     {historiaClinica?.HCApeSol?.trim()}, {historiaClinica?.HCNombre?.trim()}
                 </p>
-                <p className="text-muted">
+                <p>
                     <span className="font-bold">Profesional: </span>
                     {medico?.MENombre} ({medico?.especialidad?.ESDescripcion})
                 </p>

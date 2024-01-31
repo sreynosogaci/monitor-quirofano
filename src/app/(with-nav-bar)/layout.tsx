@@ -4,7 +4,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <>
             {/* <NavBar /> */}
-            <div className=''>
+            <div className='bg-slate-200'>
                 {children}
             </div>
         </>

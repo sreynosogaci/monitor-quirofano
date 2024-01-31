@@ -53,35 +53,35 @@ export const DetallesTurno = (props: DetallesTurnoProps) => {
                     {turnoSeleccionado && (
                         <div className="h-full overflow-y-auto pretty-scrollbar-y [&>*]:text-sm">
                             <h3 className="w-20 font-bold">Turno:</h3>
-                            <div className="ml-4 text-blue-200 grid grid-cols-[50px_1fr]">
+                            <div className="ml-4 text-blue-800 grid grid-cols-[50px_1fr]">
                                 <p>Inicio:</p>
                                 <p>{inicioTurno}hs</p>
                                 <p>Fin:</p>
                                 <p>{finTurno}hs</p>
                             </div>
                             <h3 className="w-20 font-bold">Paciente:</h3>
-                            <div className="ml-4 text-blue-200">
+                            <div className="ml-4 text-blue-800">
                                 <p>{historiaClinica?.HCNombre} ({sexo}, {edadTurnoSeleccionado})</p>
                                 {/* <p>({turnoSeleccionado.paciente.piso}, {turnoSeleccionado.paciente.habitacion}, {turnoSeleccionado.paciente.cama})</p>
                             <p>SUMA, Plan: {turnoSeleccionado.paciente.plan}</p>
                             <p>Nro Afi: {turnoSeleccionado.paciente.nroAfil}</p> */}
                             </div>
                             <h3 className="w-20 font-bold">Profesional:</h3>
-                            <div className="ml-4 text-blue-200">
+                            <div className="ml-4 text-blue-800">
                                 <p>
                                     {medico?.MENombre} ({medico?.especialidad?.ESDescripcion})
                                 </p>
                             </div>
                             <p className="w-20 font-bold">Estado:</p>
-                            <div className="ml-4 text-blue-200">
+                            <div className="ml-4 text-blue-800">
                                 <p>{turnoSeleccionado.estado ? turnoSeleccionado.estado.EstTQDsc : 'Sin estado'}</p>
                             </div>
                             <p className="w-20 font-bold">Adicionales:</p>
-                            <div className="ml-4 text-blue-200">
+                            <div className="ml-4 text-blue-800">
                                 <p>{''}</p>
                             </div>
                             <p className="w-20 font-bold">Diag/Obs:</p>
-                            <div className="ml-4 text-blue-200">
+                            <div className="ml-4 text-blue-800">
                                 <p>{turnoSeleccionado.TurObservaciones}</p>
                             </div>
                         </div>

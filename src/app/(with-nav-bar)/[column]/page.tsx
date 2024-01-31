@@ -55,7 +55,7 @@ const ColumnPage = ({ params }: { params: { column: string } }) => {
                 </div>
             </div>
             { (sala && turnos && days) ? (
-                <div className='h-[90%]'>
+                <div className='h-[90%] rounded-xl overflow-hidden shadow-2xl'>
                     <DynamicSchedule<Turno>
                         columns         = { days }
                         rows            = { schedules }
@@ -64,8 +64,9 @@ const ColumnPage = ({ params }: { params: { column: string } }) => {
                         linesPerRow     = { 1 }
                         columnAssigner  = { columnAssigner }
                         ItemComponent   = { TurnoItem }
-                        withHeaderLink  = { true }
+                        withHeaderLink  = { false }
                         itemOnClick     = { setTurnoSeleccionado }
+                        className       = 'bg-muted'
                     />
                     <DetallesTurno
                         turnoSeleccionado    = { turnoSeleccionado }

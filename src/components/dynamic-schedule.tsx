@@ -153,7 +153,8 @@ export const DynamicSchedule = <T,>(props: DynamicSchedule<T>) => {
     return (
         <div
             className={cn(
-                'relative border rounded h-full overflow-x-auto overflow-y-auto px-4 grid bg-background',
+                'relative border rounded h-full px-4 grid bg-background',
+                'overflow-x-auto overflow-y-auto pretty-scrollbar pretty-scrollbar-y pretty-scrollbar-x',
                 className
             )}
         >

@@ -31,7 +31,7 @@ const Home = () => {
                 <p>Fecha actual: {format(filtroFecha || new Date(), 'dd/MM/yyyy')}</p>
             </div>
             { (turnos && salas) ? (
-                <div className='h-[90%]'>
+                <div className='h-[90%] rounded-xl overflow-hidden shadow-2xl'>
                     <DynamicSchedule<Turno>
                         columns         = { salas }
                         rows            = { schedules }
@@ -42,6 +42,8 @@ const Home = () => {
                         ItemComponent   = { TurnoItem }
                         withHeaderLink  = { true }
                         itemOnClick     = { setTurnoSeleccionado }
+                        className       = 'bg-muted'
+                        headerClassName = 'bg-muted'
                     />
                     <DetallesTurno
                         turnoSeleccionado    = { turnoSeleccionado }
