@@ -2,13 +2,23 @@
 
 import { getEquivalenciaHorario } from '@/lib/monitor'
 import { cn } from '@/lib/utils'
-import { Turno } from '@/types/turno'
-import { EstadoEnum } from '@/types/estado'
+import { Turno } from '@/types/gaci'
+import { getDatosTurno } from '@/lib/turno'
 
 type TurnoItemProps = {
     item: Turno;
     linesPerRow: number
     onClick?: (item: Turno) => void
+}
+
+const Text = ({ title, content }: { title: string, content: string }) => {
+    return (
+        <p className="text-[10px]">
+            <span className="text-black font-bold">{title}</span>
+            {' '}<span className='text-blue-800'>{content}</span>
+        </p>
+    )
+
 }
 
 export const TurnoItem = ({ item, linesPerRow, onClick }: TurnoItemProps) => {
@@ -19,55 +29,63 @@ export const TurnoItem = ({ item, linesPerRow, onClick }: TurnoItemProps) => {
         }
     }
 
-    let horaIni = new Date(item.TurHoraIni).getUTCHours()
-    let horaFin = new Date(item.TurHoraFin).getUTCHours()
-    const minutosIni = new Date(item.TurHoraIni).getUTCMinutes()
-    const minutosFin = new Date(item.TurHoraFin).getUTCMinutes()
-
-    if (minutosIni === 30) {
-        horaIni += 0.5
-    }
-    if (minutosFin === 30) {
-        horaFin += 0.5
-    }
+    const {
+        cama,
+        cirugia,
+        edad,
+        habitacion,
+        horaFin,
+        horaInicio,
+        medicoEspecialidad,
+        medicoNombre,
+        nroHistoria,
+        obraSocial,
+        observaciones,
+        paciente,
+        planCobertura,
+        sexo,
+        horaIni,
+        horaFinal,
+        estadoColor
+    } = getDatosTurno(item)
 
     const gridRowStart = getEquivalenciaHorario(horaIni, linesPerRow)
-    const gridRowEnd = getEquivalenciaHorario(horaFin, linesPerRow)
+    const gridRowEnd = getEquivalenciaHorario(horaFinal, linesPerRow)
 
-    const historiaClinica = item.historiaClinica
-    // const edad = historiaClinica?.HCFechaNacim ? new Date().getFullYear() - new Date(historiaClinica.HCFechaNacim).getFullYear() : null
-    const medico = item.medico
-    // const sexo = historiaClinica?.HCSexo === 'M' ? 'Masculino' : 'Femenino'
 
     return (
         <div
-            className = "bg-background border border-black/30 rounded-md overflow-hidden [&>*]:text-xs shadow-xl"
+            className = "bg-background border border-black/30 rounded-md overflow-hidden [&>*]:text-[10px] shadow-xl"
             style     = {{ gridRowStart, gridRowEnd }}
             onClick   = {handleClick}
         >
             <div
                 className={cn(
                     'h-[50px] w-full flex items-center justify-center p-2',
-                    'text-black text-sm font-bold text-center',
+                    'text-black text-sm font-bold text-center bg-slate-500',
                     'overflow-y-auto pretty-scrollbar-y overflow-x-hidden',
-                    'bg-slate-500',
-                    item.estado?.EstTQCod === EstadoEnum.ADMITIDO && 'bg-yellow-400',
-                    item.estado?.EstTQCod === EstadoEnum.PREADMITIDO && 'bg-blue-700',
-                    item.estado?.EstTQCod === EstadoEnum['EN AREA QUIRÚRGICA'] && 'bg-green-400',
-                    item.estado?.EstTQCod === EstadoEnum.RESERVADO && 'bg-gray-600',
                 )}
+                style={{ backgroundColor: estadoColor }}
             >
                 <p>{item.estado ? item.estado.EstTQDsc : 'Sin estado'}</p>
             </div>
-            <div className="h-[calc(100%-40px)] w-full p-2">
-                <p>
-                    <span className="font-bold">Pac: </span>
-                    {historiaClinica?.HCApeSol?.trim()}, {historiaClinica?.HCNombre?.trim()}
-                </p>
-                <p>
-                    <span className="font-bold">Profesional: </span>
-                    {medico?.MENombre} ({medico?.especialidad?.ESDescripcion})
-                </p>
+            <div className="h-[calc(100%-40px)] w-full p-2 text-xs">
+                <Text title='Inicio:' content={horaInicio} />
+                <Text title='Fin:' content={horaFin} />
+                <Text title='Paciente:' content={`${paciente} (${sexo})`} />
+                <div className='flex gap-1'>
+                    <Text title='Edad:' content={edad?.toString() || ''} />
+                    <Text title='Historia clínica:' content={nroHistoria.toString()} />
+                </div>
+                <div className='flex gap-1'>
+                    <Text title='Internación:' content={nroHistoria.toString()} />
+                    <Text title='Habitación/cama:' content={`${habitacion}/${cama}`} />
+                </div>
+                <Text title='Obra social:' content={obraSocial} />
+                <Text title='Plan:' content={planCobertura} />
+                <Text title='Cirujano:' content={`${medicoNombre} (${medicoEspecialidad})`} />
+                <Text title='Cirugía:' content={cirugia} />
+                <Text title='Observaciones:' content={observaciones} />
             </div>
         </div>
     )

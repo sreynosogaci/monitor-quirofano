@@ -1,60 +1,50 @@
-'use client'
+import { cn } from '@/lib/utils'
+import { Calendar, LucideIcon, Monitor } from 'lucide-react'
+import Link from 'next/link'
+import React from 'react'
 
-import { DynamicSchedule } from '@/components/dynamic-schedule'
-import { getLabelHorario } from '@/lib/monitor'
-import { useState } from 'react'
-import { TurnoItem } from '@/components/turno-item'
-import { useSalas } from '@/hooks/use-salas'
-import { useTurnos } from '@/hooks/use-turnos'
-import { Turno } from '@/types/turno'
-import { Spinner } from '@/components/spinner'
-import { DetallesTurno } from './detalles-turno'
-import { FiltroFecha } from './filtro-fecha'
-import { format } from 'date-fns'
+type CardProps = { href: string, title: string, icon: LucideIcon, color: string, className?: string }
 
-const Home = () => {
-    const [filtroFecha, setFiltroFecha] = useState<Date | undefined>()
-    const [turnoSeleccionado, setTurnoSeleccionado] = useState<Turno | null>(null)
-    const schedules: { label: string }[] = []
-    for (let i = 0; i < 24; i++) {
-        schedules.push({ label: getLabelHorario(i) })
-        schedules.push({ label: getLabelHorario(i + 0.5) })
-    }
-
-    const salas  = useSalas()
-    const turnos = useTurnos(filtroFecha)
+const Card = ({ title, icon, color, className, href }: CardProps) => {
+    const Icon = icon
 
     return (
-        <div className='px-8 py-8 flex h-screen gap-2 flex-col'>
-            <div className='flex gap-4 h-[10%] items-center'>
-                <FiltroFecha date={filtroFecha} setDate={setFiltroFecha} />
-                <p>Fecha actual: {format(filtroFecha || new Date(), 'dd/MM/yyyy')}</p>
-            </div>
-            { (turnos && salas) ? (
-                <div className='h-[90%] rounded-xl overflow-hidden shadow-2xl'>
-                    <DynamicSchedule<Turno>
-                        columns         = { salas }
-                        rows            = { schedules }
-                        items           = { turnos }
-                        rowHeight       = { 50 }
-                        linesPerRow     = { 1 }
-                        columnAssigner  = { (t, c) => t.TurSala.toString().trim() === c.id.toString().trim()}
-                        ItemComponent   = { TurnoItem }
-                        withHeaderLink  = { true }
-                        itemOnClick     = { setTurnoSeleccionado }
-                        className       = 'bg-muted'
-                        headerClassName = 'bg-muted'
-                    />
-                    <DetallesTurno
-                        turnoSeleccionado    = { turnoSeleccionado }
-                        setTurnoSeleccionado = { setTurnoSeleccionado }
-                    />
-                </div>
-            ) : (
-                <Spinner />
+        <Link
+            href={href}
+            className={cn(
+                'flex flex-1 h-full items-center justify-center gap-2 border border-muted-foreground rounded',
+                'p-4 cursor-pointer transition-colors',
+                className
             )}
+        >
+            <Icon className='w-8 h-8' fill={color}/>
+            <h2 className='text-[24px] font-bold'>{title}</h2>
+        </Link>
+    )
+}
+
+const HomePage = () => {
+    return (
+        <div className="w-screen h-screen flex flex-col items-center justify-center">
+            <h1 className="text-4xl font-bold text-center mb-10">Colón</h1>
+            <div className='w-[600px] flex gap-4 items-center justify-center h-[200px]'>
+                <Card 
+                    icon={Calendar}
+                    href='/agenda'
+                    title='Agenda'
+                    color='#f45d48'
+                    className='hover:bg-[#f45d4870]'
+                />
+                <Card 
+                    icon={Monitor}
+                    href='/monitor'
+                    title='Monitor'
+                    color='#078080'
+                    className='hover:bg-[#07808070]'
+                />
+            </div>
         </div>
     )
 }
 
-export default Home
+export default HomePage

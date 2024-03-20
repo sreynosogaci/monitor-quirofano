@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils'
 import { getUUID } from '@/lib/uuid'
 import Link from 'next/link'
-import React, { PropsWithChildren } from 'react'
+import React, { PropsWithChildren, useEffect, useRef } from 'react'
 
 interface BaseItem { id: string, columnId: string, row: number, rowSpan: number }
 type Column = { id: string, label: string }
@@ -17,6 +17,7 @@ type DynamicSchedule<T> = {
     columns:          Column[],
     rows:             Row[]
     rowHeight:        number
+    minColumnWidth:   number
     linesPerRow:      number
     headerClassName?: string
     linesClassName?:  string
@@ -25,7 +26,7 @@ type DynamicSchedule<T> = {
     items:            (T & Partial<BaseItem>)[]
     ItemComponent:    (props: SubComponentProps<T>) => JSX.Element
     withHeaderLink?:  boolean
-    itemOnClick:      (item: T & Partial<BaseItem>) => void
+    itemOnClick?:     (item: T & Partial<BaseItem>) => void
 }
 
 type DynamicScheduleLines = {
@@ -132,6 +133,7 @@ export const DynamicSchedule = <T,>(props: DynamicSchedule<T>) => {
         columns, 
         rows, 
         rowHeight, 
+        minColumnWidth,
         linesPerRow, 
         className, 
         linesClassName,
@@ -143,15 +145,30 @@ export const DynamicSchedule = <T,>(props: DynamicSchedule<T>) => {
         itemOnClick
     } = props
     
+    const containerRef = useRef<HTMLDivElement>(null)
     const firstColumnsWidth = 100
-
     const styleObject = {
-        columns: { gridTemplateColumns: `${firstColumnsWidth}px repeat(${columns.length}, minmax(200px, 1fr))` },
+        columns: { gridTemplateColumns: `${firstColumnsWidth}px repeat(${columns.length}, minmax(${minColumnWidth}px, 1fr))` },
         rows:    { gridTemplateRows: `repeat(${rows.length * linesPerRow}, ${rowHeight}px)` }
     }
 
+    useEffect(() => {
+        const scroll = () => {
+            if (!containerRef.current) return
+            const actualHour = new Date().getHours()
+            const toScroll = (actualHour * rowHeight * 2) - (rowHeight * 2)
+            containerRef.current.scrollTop = toScroll
+        }
+        const hour = 1000 * 60 * 60
+        const interval = setInterval(scroll, hour)
+        scroll()
+
+        return () => clearInterval(interval)
+    }, [])
+
     return (
         <div
+            ref={containerRef}
             className={cn(
                 'relative border rounded h-full px-4 grid bg-background',
                 'overflow-x-auto overflow-y-auto pretty-scrollbar pretty-scrollbar-y pretty-scrollbar-x',

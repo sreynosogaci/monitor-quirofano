@@ -1,6 +1,5 @@
 import { useToast } from '@/components/ui/use-toast'
-import { Sala } from '@/types/sala'
-import { Turno } from '@/types/turno'
+import { Sala, Turno } from '@/types/gaci'
 import { addDays, format } from 'date-fns'
 import { useEffect, useState } from 'react'
 
@@ -45,6 +44,7 @@ export const useTurnosPorSemana = (sala: Sala | null, date: Date | undefined) =>
             data.forEach((turnos) => {
                 newTurnos.push(...turnos)
             })
+            console.log(newTurnos)
             setTurnos(newTurnos)
         })
 

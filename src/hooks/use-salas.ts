@@ -1,5 +1,5 @@
 import { useToast } from '@/components/ui/use-toast'
-import { Sala } from '@/types/sala'
+import { Sala } from '@/types/gaci'
 import { useEffect, useState } from 'react'
 
 export const useSalas = () => {

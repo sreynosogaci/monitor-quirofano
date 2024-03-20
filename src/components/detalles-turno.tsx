@@ -1,8 +1,8 @@
 import React from 'react'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 // import { Button } from '@/components/ui/button'
-import { format } from 'date-fns'
 import { Turno } from '@/types/turno'
+import { formatZone } from '@/lib/date'
 
 type DetallesTurnoProps = {
     turnoSeleccionado: Turno | null
@@ -22,22 +22,6 @@ export const DetallesTurno = (props: DetallesTurnoProps) => {
     const edadTurnoSeleccionado = historiaClinica?.HCFechaNacim ? new Date().getFullYear() - new Date(historiaClinica.HCFechaNacim).getFullYear() : null
     const medico      = turnoSeleccionado?.medico
     const sexo        = historiaClinica?.HCSexo === 'M' ? 'Masculino' : 'Femenino'
-
-    
-    // const zonaHoraria = 'America/Buenos_Aires'
-    const formatZone = (date: Date) => {
-        console.log(date)
-        const pattern = 'dd/MM/yyyy'
-        const hours = date.getUTCHours()
-        const minutes = date.getUTCMinutes()
-        const hoursString = hours < 10 ? `0${hours}` : `${hours}`
-        const minutesString = minutes < 10 ? `0${minutes}` : `${minutes}`
-        const formattedData = `${format(date, pattern)} ${hoursString}:${minutesString}`
-        // const dateAsUtc = zonedTimeToUtc(date, 'UTC')
-        // return format(utcToZonedTime(dateAsUtc, zonaHoraria), pattern)
-        return formattedData
-    }
-
     const inicioTurno = turnoSeleccionado?.TurHoraIni ? formatZone(new Date(turnoSeleccionado.TurHoraIni)) : ''
     const finTurno    = turnoSeleccionado?.TurHoraFin ? formatZone(new Date(turnoSeleccionado.TurHoraFin)) : ''
 

@@ -22,11 +22,11 @@ const NavOptions = ({ options }: { options: NavBarOption[] }) => (
     </ul>
 )
 
-export const NavBar = () => {
+export const NavBar = ({ dynamic }: { dynamic?: boolean }) => {
     const { value: moved, setFalse: setMovedFalse, setTrue: setMovedTrue } = useBoolean(false)
 
     const navOptions = [
-        { label: 'Agenda', value: '/' },
+        { label: 'Agenda', value: '/agenda' },
         { label: 'Monitor', value: '/monitor' },
     ]
 
@@ -41,19 +41,27 @@ export const NavBar = () => {
     useEventListener('scroll', onScroll)
 
     return (
-        <nav
-            className={cn(
-                'px-4 w-full h-nav-bar-height border-b border-b-transparent xl:px-0',
-                'transition-all fixed z-50 top-0 backdrop-blur-md',
-                moved && 'border-b-border'
+        <>
+            <nav
+                className={cn(
+                    'px-4 w-full h-nav-bar-height border-b border-b-transparent xl:px-0',
+                    'transition-all fixed z-50 top-0 backdrop-blur-md',
+                    moved && 'border-b-border',
+                    dynamic && 'absolute top-[-100%] z-50 backdrop-blur-none border-b-border'
+                )}
+            >
+                <div className="w-full h-full mx-auto max-w-7xl flex justify-center items-center relative">
+                    <NavOptions options={navOptions}/>
+                    {/* <Image src={Logo} alt='Logo' className='h-2/3 max-h-10 w-max absolute left-0' /> */}
+                    {/* <ModeToggle className='absolute right-0 hidden xl:inline-flex'/> */}
+                    {/* <ChangeTheme /> */}
+                </div>
+            </nav>
+            { dynamic && (
+                <div className='absolute top-2 mx-auto'>
+                    Hola?
+                </div>
             )}
-        >
-            <div className="w-full h-full mx-auto max-w-7xl flex justify-center items-center relative">
-                <NavOptions options={navOptions}/>
-                {/* <Image src={Logo} alt='Logo' className='h-2/3 max-h-10 w-max absolute left-0' /> */}
-                {/* <ModeToggle className='absolute right-0 hidden xl:inline-flex'/> */}
-                {/* <ChangeTheme /> */}
-            </div>
-        </nav>
+        </>
     )
 }
