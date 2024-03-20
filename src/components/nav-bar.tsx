@@ -22,7 +22,7 @@ const NavOptions = ({ options }: { options: NavBarOption[] }) => (
     </ul>
 )
 
-export const NavBar = ({ dynamic }: { dynamic?: boolean }) => {
+const InternalNavBar = ({ className }: { className?: string }) => {
     const { value: moved, setFalse: setMovedFalse, setTrue: setMovedTrue } = useBoolean(false)
 
     const navOptions = [
@@ -41,26 +41,37 @@ export const NavBar = ({ dynamic }: { dynamic?: boolean }) => {
     useEventListener('scroll', onScroll)
 
     return (
+        <nav
+            className={cn(
+                'px-4 w-full h-nav-bar-height border-b border-b-transparent xl:px-0',
+                'transition-all fixed z-50 top-0 backdrop-blur-md',
+                moved && 'border-b-border',
+                className
+            )}
+        >
+            <div className="w-full h-full mx-auto max-w-7xl flex justify-center items-center relative">
+                <NavOptions options={navOptions}/>
+                {/* <Image src={Logo} alt='Logo' className='h-2/3 max-h-10 w-max absolute left-0' /> */}
+                {/* <ModeToggle className='absolute right-0 hidden xl:inline-flex'/> */}
+                {/* <ChangeTheme /> */}
+            </div>
+        </nav>
+    )
+}
+
+
+export const NavBar = ({ dynamic }: { dynamic?: boolean }) => {
+
+    return (
         <>
-            <nav
-                className={cn(
-                    'px-4 w-full h-nav-bar-height border-b border-b-transparent xl:px-0',
-                    'transition-all fixed z-50 top-0 backdrop-blur-md',
-                    moved && 'border-b-border',
-                    dynamic && 'absolute top-[-100%] z-50 backdrop-blur-none border-b-border'
-                )}
-            >
-                <div className="w-full h-full mx-auto max-w-7xl flex justify-center items-center relative">
-                    <NavOptions options={navOptions}/>
-                    {/* <Image src={Logo} alt='Logo' className='h-2/3 max-h-10 w-max absolute left-0' /> */}
-                    {/* <ModeToggle className='absolute right-0 hidden xl:inline-flex'/> */}
-                    {/* <ChangeTheme /> */}
+            { dynamic ? (
+                <div className='absolute mx-auto h-nav-bar-height w-full group'>
+                    <InternalNavBar
+                        className='opacity-0 translate-y-[-5px] group-hover:opacity-100 group-hover:translate-y-0'
+                    />
                 </div>
-            </nav>
-            { dynamic && (
-                <div className='absolute top-2 mx-auto'>
-                    Hola?
-                </div>
+            ) : (
+                <InternalNavBar />
             )}
         </>
     )
