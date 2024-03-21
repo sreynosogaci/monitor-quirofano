@@ -65,9 +65,9 @@ export const NavBar = ({ dynamic }: { dynamic?: boolean }) => {
     return (
         <>
             { dynamic ? (
-                <div className='absolute mx-auto h-nav-bar-height w-full group'>
+                <div className='absolute top-0 left-[50vw - ] z-50 h-4 group w-10 bg-red-300 '>
                     <InternalNavBar
-                        className='opacity-0 translate-y-[-5px] group-hover:opacity-100 group-hover:translate-y-0'
+                        className='opacity-0 translate-y-[-64px] group-hover:opacity-100 group-hover:translate-y-0 left-0'
                     />
                 </div>
             ) : (
